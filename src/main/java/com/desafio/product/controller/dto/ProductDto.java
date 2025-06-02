@@ -17,6 +17,5 @@ public class ProductDto {
     @NotNull(message = "Preço não pode ser nulo.")
     @Positive(message = "Valor deve ser maior que 0.")
     Double price;
-    @Positive(message = "Quantidade de estoque deve ser maior que 0.")
-    long quantity;
+    Long quantity;
 }
