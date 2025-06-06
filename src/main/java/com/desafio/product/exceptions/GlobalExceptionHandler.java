@@ -28,6 +28,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(resposta);
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErroResposta> handleGenericException(Exception ex) {
+        ErroResposta resposta = new ErroResposta();
+        resposta.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        resposta.setMessage("Ocorreu um erro inesperado. Por favor, tente novamente mais tarde.");
+        resposta.setErros(List.of());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(resposta);
+    }
+
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErroResposta> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
         ErroResposta resposta = new ErroResposta();
