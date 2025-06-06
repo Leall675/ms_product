@@ -51,6 +51,7 @@ public class ProductService {
         Product product = productRepository.findById(id).orElseThrow(
                 () -> new ProdutoNaoEncontrado("Produto não localizado na base de dados.")
         );
+        validarProduto(dto.getName());
         product.setName(dto.getName());
         product.setPrice(dto.getPrice());
         Product updateProduct = productRepository.save(product);
@@ -74,5 +75,11 @@ public class ProductService {
 
     private boolean existeProdutoPorNome(String product) {
         return productRepository.existsByNameIgnoreCase(product);
+    }
+
+    public void deletarProduto(String id) {
+        Product produto = productRepository.findById(id).orElseThrow(
+                () -> new ProdutoNaoEncontrado("Produto não localizado na base de dados."));
+        productRepository.deleteById(id);
     }
 }
