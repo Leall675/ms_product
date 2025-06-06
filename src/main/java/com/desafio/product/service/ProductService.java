@@ -4,6 +4,7 @@ import com.desafio.product.controller.dto.request.ProductDto;
 import com.desafio.product.controller.dto.response.ProductDtoResponse;
 import com.desafio.product.controller.dto.request.StockUpdateDto;
 import com.desafio.product.controller.mapper.ProductMapper;
+import com.desafio.product.exceptions.ProdutoDuplicado;
 import com.desafio.product.model.Product;
 import com.desafio.product.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ public class ProductService {
 
     public ProductDtoResponse salvar(ProductDto dto) {
         Product product = ProductMapper.toEntity(dto);
+        validarProduto(dto.getName());
         if (product.getQuantity() == null) {
             product.setQuantity(0L);
         }
@@ -61,5 +63,15 @@ public class ProductService {
 
         product.setQuantity(product.getQuantity() + stockUpdateDto.getQuantity());
         return productRepository.save(product);
+    }
+
+    private void validarProduto(String name) {
+        if (existeProdutoPorNome(name)){
+            throw new ProdutoDuplicado("Esse produto já existe na base de dados.");
+        }
+    }
+
+    private boolean existeProdutoPorNome(String product) {
+        return productRepository.existsByNameIgnoreCase(product);
     }
 }
