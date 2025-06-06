@@ -45,4 +45,13 @@ public class GlobalExceptionHandler {
         resposta.setErros(List.of());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(resposta);
     }
+
+    @ExceptionHandler(ProdutoNaoEncontrado.class)
+    public ResponseEntity<ErroResposta> handleProdutoNaoEncontrado(ProdutoNaoEncontrado ex) {
+        ErroResposta resposta = new ErroResposta();
+        resposta.setStatus(HttpStatus.NOT_FOUND.value());
+        resposta.setMessage(ex.getMessage());
+        resposta.setErros(List.of());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resposta);
+    }
 }
