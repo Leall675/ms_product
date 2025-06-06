@@ -5,6 +5,7 @@ import com.desafio.product.controller.dto.response.ProductDtoResponse;
 import com.desafio.product.controller.dto.request.StockUpdateDto;
 import com.desafio.product.controller.mapper.ProductMapper;
 import com.desafio.product.exceptions.ProdutoDuplicado;
+import com.desafio.product.exceptions.ProdutoNaoEncontrado;
 import com.desafio.product.model.Product;
 import com.desafio.product.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ public class ProductService {
 
     public ProductDtoResponse buscarPorId(String productId) {
         Product product = productRepository.findById(productId).orElseThrow(
-                () -> new RuntimeException("Produto não localizado.")
+                () -> new ProdutoNaoEncontrado("Produto não localizado na base de dados.")
         );
         return ProductMapper.toDto(product);
     }
@@ -48,7 +49,7 @@ public class ProductService {
 
     public ProductDtoResponse atualizarProduto(String id, ProductDto dto) {
         Product product = productRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("Produto não localizado.")
+                () -> new ProdutoNaoEncontrado("Produto não localizado na base de dados.")
         );
         product.setName(dto.getName());
         product.setPrice(dto.getPrice());
@@ -58,7 +59,7 @@ public class ProductService {
 
     public Product inserirEstoque(String productId, StockUpdateDto stockUpdateDto) {
         Product product = productRepository.findById(productId).orElseThrow(
-                () -> new RuntimeException("Produto não localizado.")
+                () -> new ProdutoNaoEncontrado("Produto não localizado na base de dados.")
         );
 
         product.setQuantity(product.getQuantity() + stockUpdateDto.getQuantity());
