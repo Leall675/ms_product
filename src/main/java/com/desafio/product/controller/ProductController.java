@@ -46,4 +46,12 @@ public class ProductController {
         Product productDtoResponse = productService.inserirEstoque(id,stockUpdateDto);
         return ResponseEntity.ok(ProductMapper.toDto(productDtoResponse));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductDtoResponse> alterarProduto(@PathVariable String id,
+                                                             @RequestBody @Valid ProductDto dto
+                                                             ) {
+        ProductDtoResponse product = productService.atualizarProduto(id, dto);
+        return ResponseEntity.ok(product);
+    }
 }

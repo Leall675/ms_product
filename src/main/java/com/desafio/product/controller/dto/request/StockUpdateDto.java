@@ -1,4 +1,4 @@
-package com.desafio.product.controller.dto;
+package com.desafio.product.controller.dto.request;
 
 import jakarta.validation.constraints.Positive;
 import lombok.Getter;
