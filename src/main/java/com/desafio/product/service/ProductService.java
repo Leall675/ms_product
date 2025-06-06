@@ -1,8 +1,8 @@
 package com.desafio.product.service;
 
-import com.desafio.product.controller.dto.ProductDto;
-import com.desafio.product.controller.dto.ProductDtoResponse;
-import com.desafio.product.controller.dto.StockUpdateDto;
+import com.desafio.product.controller.dto.request.ProductDto;
+import com.desafio.product.controller.dto.response.ProductDtoResponse;
+import com.desafio.product.controller.dto.request.StockUpdateDto;
 import com.desafio.product.controller.mapper.ProductMapper;
 import com.desafio.product.model.Product;
 import com.desafio.product.repository.ProductRepository;
@@ -44,10 +44,21 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
+    public ProductDtoResponse atualizarProduto(String id, ProductDto dto) {
+        Product product = productRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("Produto não localizado.")
+        );
+        product.setName(dto.getName());
+        product.setPrice(dto.getPrice());
+        Product updateProduct = productRepository.save(product);
+        return ProductMapper.toDto(updateProduct);
+    }
+
     public Product inserirEstoque(String productId, StockUpdateDto stockUpdateDto) {
         Product product = productRepository.findById(productId).orElseThrow(
                 () -> new RuntimeException("Produto não localizado.")
         );
+
         product.setQuantity(product.getQuantity() + stockUpdateDto.getQuantity());
         return productRepository.save(product);
     }

@@ -1,7 +1,7 @@
 package com.desafio.product.controller.mapper;
 
-import com.desafio.product.controller.dto.ProductDto;
-import com.desafio.product.controller.dto.ProductDtoResponse;
+import com.desafio.product.controller.dto.request.ProductDto;
+import com.desafio.product.controller.dto.response.ProductDtoResponse;
 import com.desafio.product.model.Product;
 import org.springframework.stereotype.Component;
 
