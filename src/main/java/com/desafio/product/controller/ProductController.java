@@ -1,8 +1,8 @@
 package com.desafio.product.controller;
 
-import com.desafio.product.controller.dto.ProductDto;
-import com.desafio.product.controller.dto.ProductDtoResponse;
-import com.desafio.product.controller.dto.StockUpdateDto;
+import com.desafio.product.controller.dto.request.ProductDto;
+import com.desafio.product.controller.dto.response.ProductDtoResponse;
+import com.desafio.product.controller.dto.request.StockUpdateDto;
 import com.desafio.product.controller.mapper.ProductMapper;
 import com.desafio.product.model.Product;
 import com.desafio.product.service.ProductService;

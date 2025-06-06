@@ -1,6 +1,5 @@
-package com.desafio.product.controller.dto;
+package com.desafio.product.controller.dto.request;
 
-import com.desafio.product.model.Product;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
