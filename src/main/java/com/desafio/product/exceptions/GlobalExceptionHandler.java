@@ -1,7 +1,7 @@
 package com.desafio.product.exceptions;
 
-import com.desafio.product.controller.dto.error.ErroCampo;
-import com.desafio.product.controller.dto.error.ErroResposta;
+import com.desafio.product.dto.error.ErroCampo;
+import com.desafio.product.dto.error.ErroResposta;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
