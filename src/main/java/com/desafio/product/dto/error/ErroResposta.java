@@ -1,4 +1,4 @@
-package com.desafio.product.controller.dto.error;
+package com.desafio.product.dto.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

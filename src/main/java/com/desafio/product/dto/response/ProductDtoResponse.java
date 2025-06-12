@@ -1,4 +1,4 @@
-package com.desafio.product.controller.dto.response;
+package com.desafio.product.dto.response;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
