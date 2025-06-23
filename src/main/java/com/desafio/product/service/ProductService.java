@@ -24,26 +24,26 @@ public class ProductService {
     private ProductMapper productMapper;
 
     public ProductDtoResponse salvar(ProductDto dto) {
-        Product product = ProductMapper.toEntity(dto);
+        Product product = productMapper.toEntity(dto);
         validarProduto(dto.getName());
         if (product.getQuantity() == null) {
             product.setQuantity(0L);
         }
         Product savedProduct = productRepository.save(product);
-        return ProductMapper.toDto(savedProduct);
+        return productMapper.toDto(savedProduct);
     }
 
     public ProductDtoResponse buscarPorId(String productId) {
         Product product = productRepository.findById(productId).orElseThrow(
                 () -> new ProdutoNaoEncontrado("Produto não localizado na base de dados.")
         );
-        return ProductMapper.toDto(product);
+        return productMapper.toDto(product);
     }
 
     public List<ProductDtoResponse> buscarProdutos() {
         List<Product> produtos = productRepository.findAll();
         return produtos.stream()
-                .map(product -> ProductMapper.toDto(product))
+                .map(product -> productMapper.toDto(product))
                 .collect(Collectors.toList());
     }
 
@@ -55,7 +55,7 @@ public class ProductService {
         product.setName(dto.getName());
         product.setPrice(dto.getPrice());
         Product updateProduct = productRepository.save(product);
-        return ProductMapper.toDto(updateProduct);
+        return productMapper.toDto(updateProduct);
     }
 
     public Product inserirEstoque(String productId, StockUpdateDto stockUpdateDto) {
