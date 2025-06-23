@@ -21,6 +21,9 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private ProductMapper productMapper;
+
     @PostMapping
     public ResponseEntity<ProductDtoResponse> salvar(@RequestBody @Valid ProductDto dto) {
         ProductDtoResponse responseDto =  productService.salvar(dto);
@@ -44,7 +47,7 @@ public class ProductController {
                                                              @RequestBody @Valid StockUpdateDto stockUpdateDto
                                                              ) {
         Product productDtoResponse = productService.inserirEstoque(id,stockUpdateDto);
-        return ResponseEntity.ok(ProductMapper.toDto(productDtoResponse));
+        return ResponseEntity.ok(productMapper.toDto(productDtoResponse));
     }
 
     @PutMapping("/{id}")
