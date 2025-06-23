@@ -13,4 +13,6 @@ public class ProductDtoResponse {
     Double price;
     long quantity;
 
+    public ProductDtoResponse(String id, String name, Double price, Long quantity) {
+    }
 }
