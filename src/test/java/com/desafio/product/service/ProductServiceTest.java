@@ -8,6 +8,7 @@ import com.desafio.product.exceptions.ProdutoNaoEncontrado;
 import com.desafio.product.mapper.ProductMapper;
 import com.desafio.product.model.Product;
 import com.desafio.product.repository.ProductRepository;
+import com.desafio.product.validation.ProductValidation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,6 +34,9 @@ class ProductServiceTest {
     @Mock
     private ProductMapper productMapper;
 
+    @Mock
+    private ProductValidation productValidation;
+
     private ProductDto dtoRequest;
     private Product product;
 
@@ -48,13 +52,14 @@ class ProductServiceTest {
         product.setId("1");
         product.setName(dtoRequest.getName());
         product.setPrice(dtoRequest.getPrice());
-        product.setQuantity(0L);
+        product.setQuantity(10L);
     }
 
     @Test
     @DisplayName("Dado que realizo a criação de um produto, então o produto deve ser salvo com sucesso.")
     void salvar() {
         when(productMapper.toEntity(dtoRequest)).thenReturn(product);
+        when(productValidation.existeProdutoPorNome(dtoRequest.getName())).thenReturn(false);
         when(productRepository.save(product)).thenReturn(product);
         when(productMapper.toDto(product)).thenReturn(new ProductDtoResponse(product.getId(), product.getName(), product.getPrice(), product.getQuantity()));
 
@@ -68,11 +73,13 @@ class ProductServiceTest {
 
     @Test
     @DisplayName("Dado que o nome do produto já existe, então deve lançar uma exceção de ProdutoDuplicado.")
-    void salvar_ProdutoDuplicado() {
-        when(productMapper.toEntity(dtoRequest)).thenReturn(product);
-        when(productRepository.existsByNameIgnoreCase(dtoRequest.getName())).thenReturn(true);
-
+    void salvarProdutoDuplicado() {
+        doThrow(new ProdutoDuplicado("Esse produto já existe na base de dados."))
+                .when(productValidation)
+                .validarProduto(dtoRequest.getName());
         assertThrows(ProdutoDuplicado.class, () -> productService.salvar(dtoRequest));
+        verify(productValidation).validarProduto(dtoRequest.getName());
+        verify(productRepository, never()).save(any());
     }
 
     @Test
@@ -90,7 +97,7 @@ class ProductServiceTest {
 
     @Test
     @DisplayName("Dado que busco um produto com ID inválido, deve lançar uma exceção ProdutoNaoEncontrado.")
-    void buscarPorId_ProdutoNaoEncontrado() {
+    void buscarPorIdProdutoNaoEncontrado() {
         when(productRepository.findById("1")).thenReturn(Optional.empty());
 
         assertThrows(ProdutoNaoEncontrado.class, () -> productService.buscarPorId("1"));
@@ -131,7 +138,10 @@ class ProductServiceTest {
         updateDto.setPrice(60.0);
 
         when(productRepository.findById("1")).thenReturn(Optional.of(product));
-        when(productMapper.toEntity(updateDto)).thenReturn(product);
+
+        product.setName(updateDto.getName());
+        product.setPrice(updateDto.getPrice());
+
         when(productRepository.save(product)).thenReturn(product);
         when(productMapper.toDto(product)).thenReturn(new ProductDtoResponse(product.getId(), product.getName(), product.getPrice(), product.getQuantity()));
 
@@ -145,8 +155,22 @@ class ProductServiceTest {
     }
 
     @Test
+    @DisplayName("Dado que desejo inserir estoque para um produto, Entao o valor do campo que representa a quantidade deve ser atualizado.")
+    void inserirEstoqueParaOProduto() {
+        StockUpdateDto dtoStock = new StockUpdateDto();
+        dtoStock.setQuantity(10L);
+        when(productRepository.findById("1")).thenReturn(Optional.of(product));
+        when(productRepository.save(product)).thenReturn(product);
+        Product updatedProduct = productService.inserirEstoque("1", dtoStock);
+        assertNotNull(updatedProduct);
+        assertEquals(20, updatedProduct.getQuantity());
+        verify(productRepository).findById("1");
+        verify(productRepository).save(product);
+    }
+
+    @Test
     @DisplayName("Dado que desejo atualizar um produto com ID inválido, deve lançar uma exceção ProdutoNaoEncontrado.")
-    void atualizarProduto_ProdutoNaoEncontrado() {
+    void atualizarProdutoProdutoNaoEncontrado() {
         ProductDto updateDto = new ProductDto();
         updateDto.setName("Produto Atualizado");
         updateDto.setPrice(60.0);
@@ -168,7 +192,7 @@ class ProductServiceTest {
 
     @Test
     @DisplayName("Dado que desejo excluir um produto com ID inválido, deve lançar uma exceção ProdutoNaoEncontrado.")
-    void deletarProduto_ProdutoNaoEncontrado() {
+    void deletarProdutoProdutoNaoEncontrado() {
         when(productRepository.findById("1")).thenReturn(Optional.empty());
 
         assertThrows(ProdutoNaoEncontrado.class, () -> productService.deletarProduto("1"));
