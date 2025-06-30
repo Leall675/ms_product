@@ -8,6 +8,7 @@ import com.desafio.product.exceptions.ProdutoDuplicado;
 import com.desafio.product.exceptions.ProdutoNaoEncontrado;
 import com.desafio.product.model.Product;
 import com.desafio.product.repository.ProductRepository;
+import com.desafio.product.validation.ProductValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,9 +24,12 @@ public class ProductService {
     @Autowired
     private ProductMapper productMapper;
 
+    @Autowired
+    private ProductValidation validation;
+
     public ProductDtoResponse salvar(ProductDto dto) {
         Product product = productMapper.toEntity(dto);
-        validarProduto(dto.getName());
+        validation.validarProduto(dto.getName());
         if (product.getQuantity() == null) {
             product.setQuantity(0L);
         }
@@ -51,7 +55,7 @@ public class ProductService {
         Product product = productRepository.findById(id).orElseThrow(
                 () -> new ProdutoNaoEncontrado("Produto não localizado na base de dados.")
         );
-        validarProduto(dto.getName());
+        validation.validarProduto(dto.getName());
         product.setName(dto.getName());
         product.setPrice(dto.getPrice());
         Product updateProduct = productRepository.save(product);
@@ -65,16 +69,6 @@ public class ProductService {
 
         product.setQuantity(product.getQuantity() + stockUpdateDto.getQuantity());
         return productRepository.save(product);
-    }
-
-    private void validarProduto(String name) {
-        if (existeProdutoPorNome(name)){
-            throw new ProdutoDuplicado("Esse produto já existe na base de dados.");
-        }
-    }
-
-    private boolean existeProdutoPorNome(String product) {
-        return productRepository.existsByNameIgnoreCase(product);
     }
 
     public void deletarProduto(String id) {
