@@ -3,6 +3,7 @@ package com.desafio.product.controller;
 import com.desafio.product.dto.request.ProductDto;
 import com.desafio.product.dto.response.ProductDtoResponse;
 import com.desafio.product.dto.request.StockUpdateDto;
+import com.desafio.product.model.Product;
 import com.desafio.product.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
