@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/product")
+@RequestMapping("/v1/products")
 public class ProductController {
 
     @Autowired
@@ -42,7 +42,7 @@ public class ProductController {
         return ResponseEntity.ok(produtos);
     }
 
-    @PatchMapping("/stock/{id}")
+    @PatchMapping("/{id}/stock")
     public ResponseEntity<ProductDtoResponse> inserirEstoque(@PathVariable String id,
                                                              @RequestBody @Valid StockUpdateDto stockUpdateDto
                                                              ) {
