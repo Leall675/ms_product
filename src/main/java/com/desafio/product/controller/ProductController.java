@@ -39,6 +39,9 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<List<ProductDtoResponse>> listarTodos() {
         List<ProductDtoResponse> produtos = productService.buscarProdutos();
+        if (produtos.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
         return ResponseEntity.ok(produtos);
     }
 
