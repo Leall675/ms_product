@@ -3,6 +3,7 @@ package com.desafio.product.controller;
 import com.desafio.product.dto.request.ProductDto;
 import com.desafio.product.dto.response.ProductDtoResponse;
 import com.desafio.product.dto.request.StockUpdateDto;
+import com.desafio.product.mapper.ProductMapper;
 import com.desafio.product.model.Product;
 import com.desafio.product.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,6 +28,9 @@ class ProductControllerTest {
 
     @Mock
     private ProductService productService;
+
+    @Mock
+    private ProductMapper productMapper;
 
     @BeforeEach
     public void setUp() {
@@ -85,14 +89,25 @@ class ProductControllerTest {
         StockUpdateDto stockUpdateDto = new StockUpdateDto();
         stockUpdateDto.setQuantity(10L);
 
-        ProductDtoResponse dtoResponse = new ProductDtoResponse("123", "Produto Teste", 50.0, 10L);
+        Product product = new Product();
+        product.setId("123");
+        product.setName("Produto Teste");
+        product.setPrice(50.0);
+        product.setQuantity(10L);
 
-        when(productService.inserirEstoque("123", stockUpdateDto)).thenReturn(new Product("123", "Produto Teste", 50.0, 10L));
+        ProductDtoResponse dtoResponse = new ProductDtoResponse("123", "Produto Teste", 50.0, 20L);
+
+        when(productService.inserirEstoque("123", stockUpdateDto)).thenReturn(product);
+        when(productMapper.toDto(product)).thenReturn(dtoResponse);
 
         ResponseEntity<ProductDtoResponse> response = productController.inserirEstoque("123", stockUpdateDto);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(dtoResponse, response.getBody());
+        assertNotNull(response.getBody());
+        assertEquals(dtoResponse.getId(), response.getBody().getId());
+        assertEquals(dtoResponse.getName(), response.getBody().getName());
+        assertEquals(dtoResponse.getPrice(), response.getBody().getPrice());
+        assertEquals(20L, response.getBody().getQuantity());
     }
 
     @Test
