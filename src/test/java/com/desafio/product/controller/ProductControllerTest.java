@@ -97,10 +97,10 @@ class ProductControllerTest {
 
         ProductDtoResponse dtoResponse = new ProductDtoResponse("123", "Produto Teste", 50.0, 20L);
 
-        when(productService.inserirEstoque("123", stockUpdateDto)).thenReturn(product);
+        when(productService.manipularEstoque("123", stockUpdateDto)).thenReturn(product);
         when(productMapper.toDto(product)).thenReturn(dtoResponse);
 
-        ResponseEntity<ProductDtoResponse> response = productController.inserirEstoque("123", stockUpdateDto);
+        ResponseEntity<ProductDtoResponse> response = productController.manipularEstoque("123", stockUpdateDto);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());

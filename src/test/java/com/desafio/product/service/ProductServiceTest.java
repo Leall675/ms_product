@@ -161,7 +161,7 @@ class ProductServiceTest {
         dtoStock.setQuantity(10L);
         when(productRepository.findById("1")).thenReturn(Optional.of(product));
         when(productRepository.save(product)).thenReturn(product);
-        Product updatedProduct = productService.inserirEstoque("1", dtoStock);
+        Product updatedProduct = productService.manipularEstoque("1", dtoStock);
         assertNotNull(updatedProduct);
         assertEquals(20, updatedProduct.getQuantity());
         verify(productRepository).findById("1");

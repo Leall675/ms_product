@@ -46,10 +46,10 @@ public class ProductController {
     }
 
     @PatchMapping("/{id}/stock")
-    public ResponseEntity<ProductDtoResponse> inserirEstoque(@PathVariable String id,
+    public ResponseEntity<ProductDtoResponse> manipularEstoque(@PathVariable String id,
                                                              @RequestBody @Valid StockUpdateDto stockUpdateDto
                                                              ) {
-        Product productDtoResponse = productService.inserirEstoque(id,stockUpdateDto);
+        Product productDtoResponse = productService.manipularEstoque(id,stockUpdateDto);
         return ResponseEntity.ok(productMapper.toDto(productDtoResponse));
     }
 
