@@ -83,6 +83,6 @@ public class ProductService {
     public void deletarProduto(String id) {
         Product produto = productRepository.findById(id).orElseThrow(
                 () -> new ProdutoNaoEncontrado("Produto não localizado na base de dados."));
-        productRepository.deleteById(id);
+        productRepository.deleteById(produto.getId());
     }
 }
