@@ -3,6 +3,8 @@ package com.desafio.product.service;
 import com.desafio.product.dto.request.ProductDto;
 import com.desafio.product.dto.response.ProductDtoResponse;
 import com.desafio.product.dto.request.StockUpdateDto;
+import com.desafio.product.enuns.StockOperationEnum;
+import com.desafio.product.exceptions.ProdutoSemEstoque;
 import com.desafio.product.mapper.ProductMapper;
 import com.desafio.product.exceptions.ProdutoDuplicado;
 import com.desafio.product.exceptions.ProdutoNaoEncontrado;
@@ -62,12 +64,19 @@ public class ProductService {
         return productMapper.toDto(updateProduct);
     }
 
-    public Product inserirEstoque(String productId, StockUpdateDto stockUpdateDto) {
-        Product product = productRepository.findById(productId).orElseThrow(
-                () -> new ProdutoNaoEncontrado("Produto não localizado na base de dados.")
-        );
+    public Product manipularEstoque(String productId, StockUpdateDto stockUpdateDto) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProdutoNaoEncontrado("Produto não localizado na base de dados."));
 
-        product.setQuantity(product.getQuantity() + stockUpdateDto.getQuantity());
+        if (stockUpdateDto.getOperation() == StockOperationEnum.ADD) {
+            product.setQuantity(product.getQuantity() + stockUpdateDto.getQuantity());
+        } else if (stockUpdateDto.getOperation() == StockOperationEnum.REDUCE) {
+            if (product.getQuantity() < stockUpdateDto.getQuantity()) {
+                throw new ProdutoSemEstoque("Produto com estoque insuficiente para seu pedido.");
+            }
+            product.setQuantity(product.getQuantity() - stockUpdateDto.getQuantity());
+        }
+
         return productRepository.save(product);
     }
 
