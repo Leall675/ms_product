@@ -63,4 +63,13 @@ public class GlobalExceptionHandler {
         resposta.setErros(List.of());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(resposta);
     }
+
+    @ExceptionHandler(ProdutoSemEstoque.class)
+    public ResponseEntity<ErroResposta> handleProdutoSemEstoque(ProdutoSemEstoque ex) {
+        ErroResposta resposta = new ErroResposta();
+        resposta.setStatus(HttpStatus.BAD_REQUEST.value());
+        resposta.setMessage(ex.getMessage());
+        resposta.setErros(List.of());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resposta);
+    }
 }

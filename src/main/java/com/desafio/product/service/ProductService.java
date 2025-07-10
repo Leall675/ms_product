@@ -72,7 +72,7 @@ public class ProductService {
             product.setQuantity(product.getQuantity() + stockUpdateDto.getQuantity());
         } else if (stockUpdateDto.getOperation() == StockOperationEnum.REDUCE) {
             if (product.getQuantity() < stockUpdateDto.getQuantity()) {
-                throw new ProdutoSemEstoque("Produto com estoque insuficiente para seu pedido.");
+                throw new ProdutoSemEstoque("Produto com estoque insuficiente.");
             }
             product.setQuantity(product.getQuantity() - stockUpdateDto.getQuantity());
         }
