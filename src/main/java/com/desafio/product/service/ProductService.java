@@ -67,16 +67,14 @@ public class ProductService {
     public Product manipularEstoque(String productId, StockUpdateDto stockUpdateDto) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ProdutoNaoEncontrado("Produto não localizado na base de dados."));
-
-        if (stockUpdateDto.getOperation() == StockOperationEnum.ADD) {
-            product.setQuantity(product.getQuantity() + stockUpdateDto.getQuantity());
-        } else if (stockUpdateDto.getOperation() == StockOperationEnum.REDUCE) {
-            if (product.getQuantity() < stockUpdateDto.getQuantity()) {
-                throw new ProdutoSemEstoque("Produto com estoque insuficiente.");
+        StockOperationEnum operacao = stockUpdateDto.getOperation();
+        switch (operacao) {
+            case ADD -> product.setQuantity(product.getQuantity() + stockUpdateDto.getQuantity());
+            case REDUCE -> {
+                validation.validarEstoqueParaReducao(product, stockUpdateDto.getQuantity());
+                product.setQuantity(product.getQuantity() - stockUpdateDto.getQuantity());
             }
-            product.setQuantity(product.getQuantity() - stockUpdateDto.getQuantity());
         }
-
         return productRepository.save(product);
     }
 
